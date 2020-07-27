@@ -2,33 +2,33 @@ const readline = require('readline');
 const fs = require('fs');
 
 
-const todos = [];
+let todos = [];
 const interface = readline.createInterface({input: process.stdin, output: process.stdout})
 const menu = `
 Your options are:
 
-1. Add a todo.
-2. Remove a todo.
-3. Mark a todo completed.
-4. Mark a todo uncompleted.
+1. Add a todos.
+2. Remove a todos.
+3. Mark a todos completed.
+4. Mark a todos uncompleted.
 5. Quit.
 
 `
 
 const loadTodos = function() {
-  todos.splice(0);
-  const file = fs.readFileSync('./todos.csv', 'utf8');
+  // todos.splice(0);
+  const file = fs.readFileSync(__dirname, './[todos.json]');
   const rows = file.split('\n');
   for (const rowString of rows) {
-    const todo = rowString.split(',')
-    todos.push(todo);
+    const todos = rowString.split(',')
+    todos.push(todos);
   }
 }
 
 const saveTodos = function() {
   const rowStrings = [];
-  for (const todo of todos) {
-    rowStrings.push(todo[0] + ',' + todo[1]);
+  for (const todos of todos) {
+    rowStrings.push(todos[0] + ',' + todos[1]);
   }
 
   const newContents = rowStrings.join('\n');
@@ -38,10 +38,10 @@ const saveTodos = function() {
 const displayTodos = function(shouldPrintNumber) {
   console.log('\nHere are your current todos:\n')
   for (let i = 0; i < todos.length; i++) {
-    const todo = todos[i];
-    const text = todo[0];
-    const isComplete = todo[1];
-    const priority = todo[2];
+    const todos = todos[i];
+    const text = todos[0];
+    const isComplete = todos[1];
+    const priority = todos[2];
     const num = i + 1;
     let listSymbol = '*';
     let mark = '✖';
@@ -55,14 +55,14 @@ const displayTodos = function(shouldPrintNumber) {
 
     const todoLine = listSymbol + ' ' + text + ' - priority: ' + priority + ' - ' + mark;
     // or, using interpolation:
-    // const todoLine = `${listSymbol} ${todo.text} - priority: ${todo.priority} - ${mark}`
+    // const todoLine = `${listSymbol} ${todos.text} - priority: ${todos.priority} - ${mark}`
     console.log(todoLine);
   }
 }
 
 const add = function(text) {
-  const todo = [text, 'uncomplete'];
-  todos.push(todo);
+  const todos = [text, 'uncomplete'];
+  todos.push(todos);
   saveTodos();
   displayTodos(false);
   interface.close();
@@ -102,20 +102,20 @@ const uncomplete = function(num) {
 
 const handleMenu = function(cmd) {
   if (cmd === '1') {
-    // Add a todo.
+    // Add a todos.
     interface.question('\nWhat should go on your list? ', add)
   } else if (cmd === '2') {
-    // Remove a todo.
+    // Remove a todos.
     displayTodos(true);
-    interface.question('\nPlease pick a todo to remove: ', remove)
+    interface.question('\nPlease pick a todos to remove: ', remove)
   } else if (cmd === '3') {
-    // Mark a todo complete.
+    // Mark a todos complete.
     displayTodos(true);
-    interface.question('\nPlease pick a todo to mark complete: ', complete)
+    interface.question('\nPlease pick a todos to mark complete: ', complete)
   } else if (cmd === '4') {
-    // Mark a todo complete.
+    // Mark a todos complete.
     displayTodos(true);
-    interface.question('\nPlease pick a todo to mark uncomplete: ', uncomplete)
+    interface.question('\nPlease pick a todos to mark uncomplete: ', uncomplete)
   } else {
     console.log('Quitting!');
     interface.close();
